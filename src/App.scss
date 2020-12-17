@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+$primary-color: #56547c;
+$secondary-color: #f5f5f5;
+
+// center divs mixin
+
+@mixin center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+// Homepage styling
+#home {
+  min-height: 100vh;
+  background: $secondary-color;
+  @include center-flex();
+}
+.home-content {
+  text-align: center;
+  @include center-flex();
+}
+
+.home-content button {
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 1rem;
+  background: $primary-color;
+  color: $secondary-color;
+}
+
+.logo {
+  width: 300px;
+}

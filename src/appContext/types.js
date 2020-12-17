@@ -1,0 +1,11 @@
+export const LOAD_MESSAGES = "FETCH_MESSAGES";
+export const SEND_MESSAGES = "SEND_MESSAGES";
+export const CREATE_USER = "CREATE USER";
+export const FETCH_ROOMS = "FETCH_ROOMS";
+export const CREATE_ROOM = "CREATE_ROOm";
+export const DESTROY_USER = "DESTROY_USER";
+export const DESTROY_ROOM = "DESTROY_ROOM";
+export const SET_LOADING = "SET_LOADING";
+export const SET_ERROR = "SET_ERROR";
+export const CLEAR_ERROR = "CLEAR_ERROR";
+export const SET_USER = "SET_USER";
