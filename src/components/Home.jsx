@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, Fragment } from "react";
-import Preloader from "./Preloader";
-import HomeLanding from "./HomeLanding";
-import AppContext from "../appContext/AppContext";
+import React, { useContext, useEffect, Fragment } from 'react';
+import ChatBoxUI from '../components/ChatBoxUI';
+import Preloader from './Preloader';
+import HomeLanding from './HomeLanding';
+import AppContext from '../appContext/AppContext';
 import {
   ToastsContainer,
   ToastsStore,
   ToastsContainerPosition,
-} from "react-toasts";
+} from 'react-toasts';
 
 const Home = () => {
   const appContext = useContext(AppContext);
@@ -27,7 +28,7 @@ const Home = () => {
   }, [user, loading, error]);
 
   useEffect(() => {
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem('id');
     userExists({ userId });
     //eslint-disable-next-line
   }, []);
@@ -41,7 +42,7 @@ const Home = () => {
   if (user) {
     return (
       <Fragment>
-        <h1>loadMessages</h1>
+        <ChatBoxUI />
         <ToastsContainer
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_CENTER}

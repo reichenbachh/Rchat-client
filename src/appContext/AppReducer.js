@@ -6,7 +6,7 @@ import {
   SET_ERROR,
   CLEAR_ERROR,
   SET_USER,
-} from "./types";
+} from './types';
 
 export default (state, action) => {
   switch (action.type) {
@@ -21,7 +21,7 @@ export default (state, action) => {
         messages: action.payload,
       };
     case CREATE_ROOM:
-      localStorage.setItem("id", action.payload.user.userId);
+      localStorage.setItem('id', action.payload.user.userId);
       return {
         ...state,
         roomData: action.payload,

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 $primary-color: #56547c;
 $secondary-color: #f5f5f5;
 
@@ -17,7 +17,7 @@ $secondary-color: #f5f5f5;
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 // Homepage styling
@@ -44,4 +44,85 @@ body {
 
 .logo {
   width: 300px;
+}
+
+.chat-box-container {
+  animation: animateBg 10s linear infinite;
+  background-image: linear-gradient(0deg, #56547c, #1b5583, #003366, #003153);
+  background-size: 100% 1100%;
+  height: 100vh;
+  width: 100vw;
+}
+@keyframes animateBg {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+// Chatbox Styling
+.chat-box-container {
+  min-height: 100vh;
+  @include center-flex();
+}
+
+.chat-box {
+  width: 70%;
+  height: 70%;
+  padding: 3rem;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.chat-box:before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.5);
+  filter: blur(30px);
+  margin: -20px;
+}
+
+.search_box {
+  width: 100%;
+  position: relative;
+}
+
+.search_box input[type='text'] {
+  width: 100%;
+  padding: 20px;
+  padding-right: 60px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid #fff;
+  border-radius: 10px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+}
+t[type='text']:focus {
+  border-bottom: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+.fa-paper-plane {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 25px;
+  color: #fff;
+  font-size: 25px;
 }

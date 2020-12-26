@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import AppState from "./appContext/AppState";
+import React, { useEffect } from 'react';
+import AppState from './appContext/AppState';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   withRouter,
-} from "react-router-dom";
-import Home from "./components/Home";
-import "./App.scss";
+} from 'react-router-dom';
+import Home from './components/Home';
+import './App.scss';
 
 function App() {
   return (

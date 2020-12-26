@@ -1,5 +1,5 @@
-import React from "react";
-import logo from "../assets/logo.png";
+import React from 'react';
+import logo from '../assets/logo.png';
 const HomeLanding = ({ createRoom }) => {
   return (
     <div id='home'>

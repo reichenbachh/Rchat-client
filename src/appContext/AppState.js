@@ -1,8 +1,8 @@
-import React, { useReducer } from "react";
-import axios from "axios";
-import io from "socket.io-client";
-import AppContext from "./AppContext";
-import AppReducer from "./AppReducer";
+import React, { useReducer } from 'react';
+import axios from 'axios';
+import io from 'socket.io-client';
+import AppContext from './AppContext';
+import AppReducer from './AppReducer';
 
 import {
   LOAD_MESSAGES,
@@ -11,7 +11,7 @@ import {
   CREATE_ROOM,
   CLEAR_ERROR,
   SET_USER,
-} from "./types";
+} from './types';
 
 const AppState = (props) => {
   const initialState = {
@@ -24,9 +24,9 @@ const AppState = (props) => {
 
   const [state, dispatch] = useReducer(AppReducer, AppState);
   const loadMessages = async () => {
-    const socket = io("http://localhost:8080");
-    socket.on("connection", (connection) => {
-      console.log("connected");
+    const socket = io('http://localhost:8080');
+    socket.on('connection', (connection) => {
+      console.log('connected');
     });
   };
 
@@ -40,11 +40,11 @@ const AppState = (props) => {
       setLoading();
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
       const response = await axios.get(
-        "http://localhost:8080/createRoom",
+        'http://localhost:8080/createRoom',
         config
       );
       dispatch({ type: CREATE_ROOM, payload: response.data });
@@ -59,17 +59,17 @@ const AppState = (props) => {
       console.log(data);
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
       const response = await axios.post(
-        "http://localhost:8080/chatExists",
+        'http://localhost:8080/chatExists',
         data,
         config
       );
       dispatch({ type: SET_USER, payload: response.data });
     } catch (error) {
-      console.log("no user");
+      console.log('no user');
     }
   };
 
