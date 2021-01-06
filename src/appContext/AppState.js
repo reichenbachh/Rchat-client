@@ -5,72 +5,73 @@ import AppContext from './AppContext';
 import AppReducer from './AppReducer';
 
 import {
-  LOAD_MESSAGES,
-  SET_ERROR,
-  SET_LOADING,
   CREATE_ROOM,
   CLEAR_ERROR,
-  SET_USER,
+  FETCH_ROOMS,
+  SET_LOADING,
+  READ_MESSAGES,
 } from './types';
+import { Message } from 'react-chat-ui';
 
 const AppState = (props) => {
   const initialState = {
     error: null,
     user: null,
+    rooms: null,
     loading: null,
     messages: [],
     roomData: null,
   };
 
-  const [state, dispatch] = useReducer(AppReducer, AppState);
+  const [state, dispatch] = useReducer(AppReducer, initialState);
+
+  const socket = io('http://localhost:8080');
+
   const loadMessages = async () => {
-    const socket = io('http://localhost:8080');
     socket.on('connection', (connection) => {
       console.log('connected');
     });
+    socket.on('readMessage', (messages) => {
+      dispatch({ type: READ_MESSAGES, payload: messages });
+    });
+
+    socket.on('user_room_created', ({ roomName, userName, roomID }) => {
+      console.log(userName);
+      localStorage.setItem('user', userName);
+      localStorage.setItem('room', roomName);
+      localStorage.setItem('roomID', roomID);
+      dispatch({ type: CREATE_ROOM });
+    });
+    socket.on('rooms-fected', (data) => {
+      // console.log(data);
+      dispatch({ type: FETCH_ROOMS, payload: data });
+    });
   };
 
-  //actions
+  const sendMessage = async (messageObject, roomID) => {
+    console.log(roomID);
+    socket.emit('send_message', { messageObject, roomID });
+  };
+
+  const getAllRooms = async (longitude, latitude) => {
+    console.log(longitude, latitude);
+    socket.emit('getRooms', { longitude, latitude });
+  };
+
+  const fetchMessages = () => {
+    socket.emit('fetchMessages', localStorage.getItem('roomID'));
+  };
+
+  const joinRoom = async (lon, lat) => {
+    socket.emit('joinRoom', { lon, lat });
+  };
+
   const setLoading = () => {
-    dispatch({ type: SET_LOADING });
+    return dispatch({ type: SET_LOADING });
   };
 
-  const createRoom = async () => {
-    try {
-      setLoading();
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-      const response = await axios.get(
-        'http://localhost:8080/createRoom',
-        config
-      );
-      dispatch({ type: CREATE_ROOM, payload: response.data });
-    } catch (error) {
-      console.log(error.response);
-      dispatch({ type: SET_ERROR, payload: error.response });
-    }
-  };
-
-  const userExists = async (data) => {
-    try {
-      console.log(data);
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-      const response = await axios.post(
-        'http://localhost:8080/chatExists',
-        data,
-        config
-      );
-      dispatch({ type: SET_USER, payload: response.data });
-    } catch (error) {
-      console.log('no user');
-    }
+  const createRoom = async (roomName, lon, lat) => {
+    socket.emit('createRoom', { roomName, lon, lat });
   };
 
   const clearError = () => {
@@ -81,14 +82,17 @@ const AppState = (props) => {
     <AppContext.Provider
       value={{
         user: state.user,
-        loading: state.loading,
         messages: state.messages,
-        roomData: state.roomData,
         error: state.error,
+        rooms: state.rooms,
+        loading: state.loading,
+        fetchMessages,
+        sendMessage,
+        joinRoom,
+        getAllRooms,
         loadMessages,
         createRoom,
         clearError,
-        userExists,
       }}
     >
       {props.children}

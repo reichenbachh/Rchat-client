@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from '../assets/logo.png';
-const HomeLanding = ({ createRoom }) => {
+import CreateRoomModal from '../components/CreateRoomModal';
+import AllRoomsModal from '../components/AllRoomsModal';
+const HomeLanding = ({ createRoom, getAllRooms, loading, rooms, joinRoom }) => {
   return (
     <div id='home'>
       <div className='home-content'>
@@ -8,14 +10,13 @@ const HomeLanding = ({ createRoom }) => {
           <img src={logo} className='logo' alt='' />
           <h1>Message people around you ananymously</h1>
           <div className='btns'>
-            <button>Find ChatRoom</button>
-            <button
-              onClick={() => {
-                createRoom();
-              }}
-            >
-              Create ChatRoom
-            </button>
+            <AllRoomsModal
+              joinRoom={joinRoom}
+              getAllRooms={getAllRooms}
+              rooms={rooms}
+              loading={loading}
+            />
+            <CreateRoomModal createRoom={createRoom} />
           </div>
         </div>
       </div>

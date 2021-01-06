@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, Fragment } from 'react';
 import ChatBoxUI from '../components/ChatBoxUI';
-import Preloader from './Preloader';
+
 import HomeLanding from './HomeLanding';
 import AppContext from '../appContext/AppContext';
 import {
@@ -13,36 +13,34 @@ const Home = () => {
   const appContext = useContext(AppContext);
   const {
     createRoom,
-    user,
     loading,
-    clearError,
-    error,
-    userExists,
+    loadMessages,
+    user,
+    joinRoom,
+    rooms,
+    getAllRooms,
+    sendMessage,
+    fetchMessages,
+    messages,
   } = appContext;
   useEffect(() => {
-    appContext.loadMessages();
-    if (error) {
-      ToastsStore.error(error);
-      clearError();
-    }
-  }, [user, loading, error]);
+    navigator.geolocation.getCurrentPosition(function (position) {
+      console.log('Latitude is :', position.coords.latitude);
+      console.log('Longitude is :', position.coords.longitude);
+    });
+    loadMessages();
+  }, [user]);
+  console.log(messages);
 
-  useEffect(() => {
-    const userId = localStorage.getItem('id');
-    userExists({ userId });
-    //eslint-disable-next-line
-  }, []);
-  if (loading) {
+  const userCreated = localStorage.getItem('user');
+  if (userCreated) {
     return (
       <Fragment>
-        <Preloader />
-      </Fragment>
-    );
-  }
-  if (user) {
-    return (
-      <Fragment>
-        <ChatBoxUI />
+        <ChatBoxUI
+          fetchMessages={fetchMessages}
+          messages={messages}
+          sendMessage={sendMessage}
+        />
         <ToastsContainer
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_CENTER}
@@ -52,7 +50,13 @@ const Home = () => {
   }
   return (
     <Fragment>
-      <HomeLanding createRoom={createRoom} />
+      <HomeLanding
+        joinRoom={joinRoom}
+        loading={loading}
+        getAllRooms={getAllRooms}
+        createRoom={createRoom}
+        rooms={rooms}
+      />
       <ToastsContainer
         store={ToastsStore}
         position={ToastsContainerPosition.TOP_CENTER}

@@ -5,7 +5,8 @@ import {
   SET_LOADING,
   SET_ERROR,
   CLEAR_ERROR,
-  SET_USER,
+  FETCH_ROOMS,
+  READ_MESSAGES,
 } from './types';
 
 export default (state, action) => {
@@ -20,24 +21,26 @@ export default (state, action) => {
         ...state,
         messages: action.payload,
       };
-    case CREATE_ROOM:
-      localStorage.setItem('id', action.payload.user.userId);
+    case READ_MESSAGES:
       return {
         ...state,
-        roomData: action.payload,
-        user: action.payload.user,
-        loading: false,
+        messages: action.payload,
+      };
+    case CREATE_ROOM:
+      return {
+        ...state,
+        user: true,
+      };
+    case FETCH_ROOMS:
+      return {
+        ...state,
+        rooms: action.payload,
       };
     case SET_ERROR:
       return {
         ...state,
         error: action.payload.data.msg,
         loading: false,
-      };
-    case SET_USER:
-      return {
-        ...state,
-        user: action.payload,
       };
     case CLEAR_ERROR:
       return {

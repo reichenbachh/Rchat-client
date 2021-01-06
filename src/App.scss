@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 $primary-color: #56547c;
-$secondary-color: #f5f5f5;
+$secondary-color: #ecf0f1;
 
 // center divs mixin
 
@@ -31,6 +31,7 @@ body {
   @include center-flex();
 }
 
+.leave button,
 .home-content button {
   font-size: 18px;
   outline: none;
@@ -62,10 +63,30 @@ body {
   }
 }
 
+.btns {
+  display: flex;
+  justify-content: center;
+}
 // Chatbox Styling
 .chat-box-container {
   min-height: 100vh;
+  flex-direction: column;
   @include center-flex();
+}
+
+.chat-btn {
+  display: flex;
+}
+
+.chat-btn button {
+  margin: 1rem;
+  background: $primary-color;
+  color: #fff;
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem;
 }
 
 .chat-box {
@@ -80,7 +101,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
+  overflow: scroll;
+}
+.chat-messages h5 {
+  color: $secondary-color !important;
 }
 .chat-box:before {
   content: '';
@@ -113,11 +137,24 @@ body {
   color: #fff;
   outline: none;
 }
-t[type='text']:focus {
+[type='text']:focus {
   border-bottom: 2px solid #fff !important;
   box-shadow: none !important;
 }
 
+.create-btn {
+  position: absolute;
+  top: 46%;
+  right: 3px;
+  background: $primary-color;
+  color: #fff;
+  font-size: 25px;
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem;
+}
 .fa-paper-plane {
   position: absolute;
   top: 50%;
@@ -125,4 +162,40 @@ t[type='text']:focus {
   right: 25px;
   color: #fff;
   font-size: 25px;
+}
+
+.chat-header {
+  background: $secondary-color;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo img {
+  width: 90px;
+}
+
+// Room List Styling
+
+.room-list h1 {
+  text-align: center;
+}
+
+.room-list-item {
+  align-items: center;
+  font-size: 20px;
+  padding: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px $primary-color solid;
+}
+
+.room-list-item button {
+  background: $primary-color;
+  color: #fff;
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem;
 }

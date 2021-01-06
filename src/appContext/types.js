@@ -1,4 +1,5 @@
 export const LOAD_MESSAGES = 'FETCH_MESSAGES';
+export const READ_MESSAGES = 'READ_MESSAGES';
 export const SEND_MESSAGES = 'SEND_MESSAGES';
 export const CREATE_USER = 'CREATE USER';
 export const FETCH_ROOMS = 'FETCH_ROOMS';
