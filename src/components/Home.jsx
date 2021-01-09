@@ -19,6 +19,7 @@ const Home = () => {
     joinRoom,
     rooms,
     getAllRooms,
+    readMessage,
     sendMessage,
     fetchMessages,
     messages,
@@ -40,6 +41,7 @@ const Home = () => {
           fetchMessages={fetchMessages}
           messages={messages}
           sendMessage={sendMessage}
+          readMessage={readMessage}
         />
         <ToastsContainer
           store={ToastsStore}

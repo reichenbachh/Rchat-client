@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../assets/logo.png';
-import { ChatFeed, Message } from 'react-chat-ui';
+import ChatBox, { ChatFrame } from 'react-chat-plugin';
 import BeforeUnloadComponent from 'react-beforeunload-component';
+import logo from '../assets/logo.png';
 
-const ChatBoxUI = ({ sendMessage, fetchMessages, messages }) => {
+const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
   useEffect(() => {
     fetchMessages();
+  }, []);
+  useEffect(() => {
+    readMessage();
   });
   const [createInput, setCreateInput] = useState('');
   const onChange = (e) => {
@@ -28,91 +31,93 @@ const ChatBoxUI = ({ sendMessage, fetchMessages, messages }) => {
       setCreateInput('');
     }
   };
+  console.log(messages);
 
   //convert message object into an array
-  let messagesArray = [];
+  let messagesArray = [
+    {
+      text: 'user2 has joined the conversation',
+      timestamp: 1578366389250,
+      type: 'notification',
+    },
+  ];
   for (let msg in messages) {
-    messagesArray.push(
-      new Message({
-        id: messages[msg].userName === localStorage.getItem('user') ? 0 : 1,
-        message: messages[msg].message,
-        senderName: messages[msg].userName,
-      })
-    );
+    messagesArray.push({
+      author: {
+        username: messages[msg].userName,
+        id: localStorage.getItem('user') === messages[msg].userName ? 1 : 2,
+        avatarUrl: null,
+      },
+      text: messages[msg].message,
+      type: 'text',
+      timestamp: 1578366425250,
+    });
   }
   console.log(messagesArray);
+
   // messages[room]
+  let messageData = [
+    {
+      text: 'user2 has joined the conversation',
+      timestamp: 1578366389250,
+      type: 'notification',
+    },
+    {
+      author: { username: 'user2', id: 2, avatarUrl: null },
+      text: 'Show two buttons',
+      type: 'text',
+      timestamp: 1578366425250,
+    },
+  ];
+  const handleOnSendMessage = (message) => {
+    if (message.length === 0) {
+      return alert('Please enter a message');
+    } else {
+      const userName = localStorage.getItem('user');
+      const roomName = localStorage.getItem('room');
+      const messageObject = {
+        userName,
+        roomName,
+        message,
+      };
+      sendMessage(messageObject, localStorage.getItem('roomID'));
+    }
+  };
   let messagesObject = [];
   return (
     <BeforeUnloadComponent
       blockRoute={true}
       alertMessage={'You will be disconnected when tab closes or reloads'}
     >
-      <div className='chat-box-container'>
+      <div className='chat-wrapper'>
         <div className='chat-header'>
           <div className='logo'>
-            <h1> {localStorage.getItem('room')}</h1>
+            <img src={logo} alt='' srcset='' />
           </div>
-          <div className='chat-btn'>
-            <div>
-              <button
-                onClick={() => {
-                  localStorage.removeItem('user');
-                  localStorage.removeItem('room');
-                  window.location.reload();
-                }}
-              >
-                Destroy Room
-              </button>
-            </div>
-            <div>
-              <button
-                onClick={() => {
-                  localStorage.removeItem('user');
-                  localStorage.removeItem('room');
-                  window.location.reload();
-                }}
-              >
-                Leave Room
-              </button>
-            </div>
+          <div className='room-name'>
+            <h1>{localStorage.getItem('room')}</h1>
+          </div>
+          <div className='options'>
+            <button
+              onClick={() => {
+                localStorage.removeItem('user');
+                localStorage.removeItem('room');
+                window.location.reload();
+              }}
+            >
+              Leave Room
+            </button>
+            <button>Destroy Room</button>
           </div>
         </div>
-        <div className='chat-box'>
-          <div>
-            <ChatFeed
-              messages={messagesArray} // Array: list of message objects
-              // isTyping={true} // Boolean: is the recipient typing
-              hasInputField={false} // Boolean: use our input, or use your own
-              showSenderName={true} // show the name of the user who sent the message
-              bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
-              // JSON: Custom bubble styles
-              bubbleStyles={{
-                text: {
-                  fontSize: 12,
-                },
-                chatbubble: {
-                  borderRadius: 70,
-                  padding: 18,
-                },
-              }}
-            />
-          </div>
-
-          <div className='search_box'>
-            <input
-              value={createInput}
-              type='text'
-              placeholder='enter message'
-              onChange={onChange}
-            />
-            <i
-              className='fas fa-paper-plane'
-              onClick={(e) => {
-                handleSendMessage(e);
-              }}
-            ></i>
-          </div>
+        <div className='chat-holder'>
+          <ChatBox
+            messages={messagesArray}
+            userId={1}
+            onSendMessage={handleOnSendMessage}
+            width={'900px'}
+            height={'80vh'}
+          />
         </div>
       </div>
     </BeforeUnloadComponent>

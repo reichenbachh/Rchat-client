@@ -11,7 +11,6 @@ import {
   SET_LOADING,
   READ_MESSAGES,
 } from './types';
-import { Message } from 'react-chat-ui';
 
 const AppState = (props) => {
   const initialState = {
@@ -31,9 +30,6 @@ const AppState = (props) => {
     socket.on('connection', (connection) => {
       console.log('connected');
     });
-    socket.on('readMessage', (messages) => {
-      dispatch({ type: READ_MESSAGES, payload: messages });
-    });
 
     socket.on('user_room_created', ({ roomName, userName, roomID }) => {
       console.log(userName);
@@ -45,6 +41,12 @@ const AppState = (props) => {
     socket.on('rooms-fected', (data) => {
       // console.log(data);
       dispatch({ type: FETCH_ROOMS, payload: data });
+    });
+  };
+
+  const readMessage = () => {
+    socket.on('readMessage', (messages) => {
+      dispatch({ type: READ_MESSAGES, payload: messages });
     });
   };
 
@@ -86,6 +88,7 @@ const AppState = (props) => {
         error: state.error,
         rooms: state.rooms,
         loading: state.loading,
+        readMessage,
         fetchMessages,
         sendMessage,
         joinRoom,

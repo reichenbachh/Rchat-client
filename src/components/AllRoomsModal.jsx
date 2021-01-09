@@ -21,31 +21,42 @@ const AllRoomsModal = ({ getAllRooms, loading, rooms, joinRoom }) => {
   };
 
   let supportsGeo;
+  console.log(rooms);
 
   if (navigator.geolocation) {
     supportsGeo = true;
   } else {
     supportsGeo = false;
   }
+  if (rooms) {
+    return (
+      <div>
+        <Popup trigger={<button>Find Rooms</button>} modal>
+          {supportsGeo ? (
+            <div className='room-list'>
+              <h1>Rooms Around You</h1>
+              {rooms.map((room) => (
+                <div className='room-list-item'>
+                  <p>{room.roomName}</p>
+                  <button onClick={handleJoinRoom}>Join Room</button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <h1>
+              Device doesnt support the geoloaction API,geoloaction is needed to
+              use this app
+            </h1>
+          )}
+        </Popup>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <Popup trigger={<button>Find Rooms</button>} modal>
-        {supportsGeo ? (
-          <div className='room-list'>
-            <h1>Rooms Around You</h1>
-            {rooms.map((room) => (
-              <div className='room-list-item'>
-                <p>{room.roomName}</p>
-                <button onClick={handleJoinRoom}>Join Room</button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <h1>
-            Device doesnt support the geoloaction API,geoloaction is needed to
-            use this app
-          </h1>
-        )}
+      <Popup trigger={<button>Fetching Rooms</button>} modal>
+        <h1>Fetching Rooms</h1>
       </Popup>
     </div>
   );
