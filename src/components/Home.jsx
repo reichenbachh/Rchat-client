@@ -12,6 +12,7 @@ import {
 const Home = () => {
   const appContext = useContext(AppContext);
   const {
+    isConnected,
     createRoom,
     loading,
     loadMessages,
@@ -20,6 +21,7 @@ const Home = () => {
     rooms,
     getAllRooms,
     readMessage,
+    leaveRoom,
     sendMessage,
     fetchMessages,
     messages,
@@ -31,8 +33,8 @@ const Home = () => {
     });
     loadMessages();
   }, [user]);
-  console.log(messages);
 
+  console.log(isConnected);
   const userCreated = localStorage.getItem('user');
   if (userCreated) {
     return (
@@ -42,6 +44,8 @@ const Home = () => {
           messages={messages}
           sendMessage={sendMessage}
           readMessage={readMessage}
+          isConnected={isConnected}
+          leaveRoom={leaveRoom}
         />
         <ToastsContainer
           store={ToastsStore}

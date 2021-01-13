@@ -10,11 +10,14 @@ import {
   FETCH_ROOMS,
   SET_LOADING,
   READ_MESSAGES,
+  CONNECT,
+  DISCONNECT,
 } from './types';
 
 const AppState = (props) => {
   const initialState = {
     error: null,
+    isConnected: null,
     user: null,
     rooms: null,
     loading: null,
@@ -31,12 +34,19 @@ const AppState = (props) => {
       console.log('connected');
     });
 
-    socket.on('user_room_created', ({ roomName, userName, roomID }) => {
+    socket.on('user_room_created', ({ roomName, userName, roomID, userId }) => {
       console.log(userName);
       localStorage.setItem('user', userName);
       localStorage.setItem('room', roomName);
       localStorage.setItem('roomID', roomID);
+      localStorage.setItem('userID', userId);
       dispatch({ type: CREATE_ROOM });
+    });
+    socket.on('disconnect', () => {
+      dispatch({ type: DISCONNECT });
+    });
+    socket.on('connect', () => {
+      dispatch({ type: CONNECT });
     });
     socket.on('rooms-fected', (data) => {
       // console.log(data);
@@ -50,9 +60,8 @@ const AppState = (props) => {
     });
   };
 
-  const sendMessage = async (messageObject, roomID) => {
-    console.log(roomID);
-    socket.emit('send_message', { messageObject, roomID });
+  const sendMessage = async (messageObject) => {
+    socket.emit('send_message', messageObject);
   };
 
   const getAllRooms = async (longitude, latitude) => {
@@ -64,8 +73,12 @@ const AppState = (props) => {
     socket.emit('fetchMessages', localStorage.getItem('roomID'));
   };
 
-  const joinRoom = async (lon, lat) => {
-    socket.emit('joinRoom', { lon, lat });
+  const joinRoom = async (roomID, roomName) => {
+    socket.emit('joinRoom', { roomID, roomName });
+  };
+
+  const leaveRoom = (roomID, userID) => {
+    socket.emit('leaveRoom', { roomID, userID });
   };
 
   const setLoading = () => {
@@ -88,12 +101,14 @@ const AppState = (props) => {
         error: state.error,
         rooms: state.rooms,
         loading: state.loading,
+        isConnected: state.isConnected,
         readMessage,
         fetchMessages,
         sendMessage,
         joinRoom,
         getAllRooms,
         loadMessages,
+        leaveRoom,
         createRoom,
         clearError,
       }}

@@ -3,7 +3,14 @@ import ChatBox, { ChatFrame } from 'react-chat-plugin';
 import BeforeUnloadComponent from 'react-beforeunload-component';
 import logo from '../assets/logo.png';
 
-const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
+const ChatBoxUI = ({
+  sendMessage,
+  fetchMessages,
+  messages,
+  readMessage,
+  leaveRoom,
+  isConnected,
+}) => {
   useEffect(() => {
     fetchMessages();
   }, []);
@@ -15,60 +22,44 @@ const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
     setCreateInput(e.target.value);
   };
 
-  const handleSendMessage = (e) => {
-    if (createInput.length === 0) {
-      return alert('Please enter a message');
-    } else {
-      const userName = localStorage.getItem('user');
-      const roomName = localStorage.getItem('room');
-      const message = createInput;
-      const messageObject = {
-        userName,
-        roomName,
-        message,
-      };
-      sendMessage(messageObject, localStorage.getItem('roomID'));
-      setCreateInput('');
-    }
-  };
-  console.log(messages);
-
   //convert message object into an array
-  let messagesArray = [
-    {
-      text: 'user2 has joined the conversation',
-      timestamp: 1578366389250,
-      type: 'notification',
-    },
-  ];
+  let messagesArray = [];
   for (let msg in messages) {
-    messagesArray.push({
-      author: {
-        username: messages[msg].userName,
-        id: localStorage.getItem('user') === messages[msg].userName ? 1 : 2,
-        avatarUrl: null,
-      },
-      text: messages[msg].message,
-      type: 'text',
-      timestamp: 1578366425250,
-    });
+    console.log(messages[msg].type);
+    if (messages[msg].type === 'notification') {
+      messagesArray.push({
+        text: messages[msg].text,
+        timestamp: messages[msg].timestamp,
+        type: messages[msg].type,
+      });
+    } else {
+      messagesArray.push({
+        author: {
+          username: messages[msg].userName,
+          id: localStorage.getItem('user') === messages[msg].userName ? 1 : 2,
+          avatarUrl: null,
+        },
+        text: messages[msg].message,
+        type: 'text',
+        timestamp: messages[msg].timestamp,
+      });
+    }
   }
   console.log(messagesArray);
-
   // messages[room]
-  let messageData = [
-    {
-      text: 'user2 has joined the conversation',
-      timestamp: 1578366389250,
-      type: 'notification',
-    },
-    {
-      author: { username: 'user2', id: 2, avatarUrl: null },
-      text: 'Show two buttons',
-      type: 'text',
-      timestamp: 1578366425250,
-    },
-  ];
+
+  const returnConnectionStatus = (isConnected) => {
+    if (isConnected === null) {
+      return 'reconnecting';
+    }
+    if (isConnected) {
+      return 'connected ';
+    }
+    if (!isConnected) {
+      return 'disconnected';
+    }
+  };
+
   const handleOnSendMessage = (message) => {
     if (message.length === 0) {
       return alert('Please enter a message');
@@ -79,11 +70,13 @@ const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
         userName,
         roomName,
         message,
+        roomID: localStorage.getItem('roomID'),
+        timestamp: Date.now(),
+        type: 'text',
       };
-      sendMessage(messageObject, localStorage.getItem('roomID'));
+      sendMessage(messageObject);
     }
   };
-  let messagesObject = [];
   return (
     <BeforeUnloadComponent
       blockRoute={true}
@@ -92,14 +85,27 @@ const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
       <div className='chat-wrapper'>
         <div className='chat-header'>
           <div className='logo'>
-            <img src={logo} alt='' srcset='' />
+            <img src={logo} alt='' srcSet='' />
           </div>
           <div className='room-name'>
             <h1>{localStorage.getItem('room')}</h1>
+
+            <div
+              className={`connection-status ${returnConnectionStatus(
+                isConnected
+              )}`}
+            >
+              <i className='far fa-dot-circle'></i>
+              <p>{returnConnectionStatus(isConnected)}</p>
+            </div>
           </div>
           <div className='options'>
             <button
               onClick={() => {
+                leaveRoom(
+                  localStorage.getItem('roomID'),
+                  localStorage.getItem('userID')
+                );
                 localStorage.removeItem('user');
                 localStorage.removeItem('room');
                 window.location.reload();
@@ -107,7 +113,7 @@ const ChatBoxUI = ({ sendMessage, fetchMessages, messages, readMessage }) => {
             >
               Leave Room
             </button>
-            <button>Destroy Room</button>
+            <button onClick={() => {}}>Destroy Room</button>
           </div>
         </div>
         <div className='chat-holder'>

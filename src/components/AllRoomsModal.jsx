@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import AllRoomsItem from './AllRoomsItem';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
@@ -11,15 +12,6 @@ const AllRoomsModal = ({ getAllRooms, loading, rooms, joinRoom }) => {
     });
   }, []);
 
-  const handleJoinRoom = () => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      let lat = position.coords.latitude;
-      let lon = position.coords.longitude;
-      console.log(lat, lon);
-      joinRoom(lon, lat);
-    });
-  };
-
   let supportsGeo;
   console.log(rooms);
 
@@ -31,15 +23,16 @@ const AllRoomsModal = ({ getAllRooms, loading, rooms, joinRoom }) => {
   if (rooms) {
     return (
       <div>
-        <Popup trigger={<button>Find Rooms</button>} modal>
+        <Popup trigger={<button>Available Rooms</button>} modal>
           {supportsGeo ? (
             <div className='room-list'>
               <h1>Rooms Around You</h1>
               {rooms.map((room) => (
-                <div className='room-list-item'>
-                  <p>{room.roomName}</p>
-                  <button onClick={handleJoinRoom}>Join Room</button>
-                </div>
+                <AllRoomsItem
+                  roomData={room}
+                  joinRoom={joinRoom}
+                  key={room.roomID}
+                />
               ))}
             </div>
           ) : (

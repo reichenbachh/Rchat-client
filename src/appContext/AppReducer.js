@@ -7,10 +7,22 @@ import {
   CLEAR_ERROR,
   FETCH_ROOMS,
   READ_MESSAGES,
+  CONNECT,
+  DISCONNECT,
 } from './types';
 
 export default (state, action) => {
   switch (action.type) {
+    case CONNECT:
+      return {
+        ...state,
+        isConnected: true,
+      };
+    case DISCONNECT:
+      return {
+        ...state,
+        isConnected: false,
+      };
     case SET_LOADING:
       return {
         ...state,

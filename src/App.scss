@@ -177,6 +177,24 @@ body {
   justify-content: center;
 }
 
+//connection status icon
+.connection-status {
+  display: flex;
+  align-items: center;
+}
+
+.connected {
+  color: green;
+}
+
+.reconnected {
+  color: orange;
+}
+
+.disconnected {
+  color: red;
+}
+
 @media (min-width: 576px) {
   .react-chat-container {
     max-width: 1000px !important;
